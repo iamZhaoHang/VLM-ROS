@@ -1,0 +1,16 @@
+<launch>
+    <!-- 启动音频捕获节点 -->
+    <node pkg="sound_service" type="audio_capture_node.py" name="audio_capture" output="screen">
+        <!-- 音频捕获节点参数 -->
+        <param name="sample_rate" value="16000" />
+        <param name="channels" value="1" />
+        <param name="dtype" value="float32" />
+    </node>
+
+     <!-- 启动音频播放节点 -->
+    <node pkg="sound_service" type="audio_playback_node.py" name="audio_playback" output="screen">
+        <!-- 音频播放节点参数 -->
+        <param name="sample_rate" value="8000" /> 
+        <param name="audio_data_topic" value="tts_audio_data" />
+    </node>
+</launch>

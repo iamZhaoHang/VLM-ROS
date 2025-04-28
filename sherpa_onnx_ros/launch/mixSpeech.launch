@@ -1,0 +1,51 @@
+<launch>
+    <!-- 声明 Keyword Spotter 模型文件夹参数 -->
+    <arg name="kws_model_folder" default="sherpa-onnx-kws-zipformer-wenetspeech-3.3M-2024-01-01" />
+
+    <!-- 声明 Speech Recognizer 模型文件夹参数 -->
+    <arg name="asr_model_folder" default="sherpa-onnx-streaming-zipformer-zh-14M-2023-02-23" />
+    <arg name="awake" default="true" />
+    <arg name="hw_aec" default="false" />
+
+    <!-- 启动 Hybrid Speech Node -->
+    <node pkg="sherpa_onnx_ros" type="mix_speech_node.py" name="mix_speech_node" output="screen">
+        <!-- Keyword Spotter 模型路径参数 -->
+        <param name="tokens_kws" value="$(find sherpa_onnx_ros)/models/$(arg kws_model_folder)/tokens.txt" />
+        <param name="encoder_kws" value="$(find sherpa_onnx_ros)/models/$(arg kws_model_folder)/encoder-epoch-99-avg-1-chunk-16-left-64.onnx" />
+        <param name="decoder_kws" value="$(find sherpa_onnx_ros)/models/$(arg kws_model_folder)/decoder-epoch-99-avg-1-chunk-16-left-64.onnx" />
+        <param name="joiner_kws" value="$(find sherpa_onnx_ros)/models/$(arg kws_model_folder)/joiner-epoch-99-avg-1-chunk-16-left-64.onnx" />
+        <param name="keywords_file" value="$(find sherpa_onnx_ros)/models/$(arg kws_model_folder)/keywords.txt" />
+
+        <!-- Keyword Spotter 参数配置 -->
+        <param name="num_threads" value="1" />
+        <param name="provider" value="cpu" />
+        <param name="keywords_score" value="1.0" />
+        <param name="keywords_threshold" value="0.25" />
+        <param name="num_trailing_blanks" value="1" />
+
+        <!-- Speech Recognizer 模型路径参数 -->
+        <!-- int8 type (可以只保留 fp32 或 int8，根据实际使用情况选择) -->
+        <param name="encoder_asr" value="$(find sherpa_onnx_ros)/models/$(arg asr_model_folder)/encoder-epoch-99-avg-1.onnx" />
+        <param name="decoder_asr" value="$(find sherpa_onnx_ros)/models/$(arg asr_model_folder)/decoder-epoch-99-avg-1.onnx" />
+        <param name="joiner_asr" value="$(find sherpa_onnx_ros)/models/$(arg asr_model_folder)/joiner-epoch-99-avg-1.onnx" />
+        <!-- fp32 type (如果只用 fp32，可以删除 int8 参数) -->
+        <!--
+        <param name="encoder_asr" value="$(find sherpa_onnx_ros)/models/$(arg asr_model_folder)/encoder-epoch-99-avg-1.onnx" />
+        <param name="decoder_asr" value="$(find sherpa_onnx_ros)/models/$(arg asr_model_folder)/decoder-epoch-99-avg-1.onnx" />
+        <param name="joiner_asr" value="$(find sherpa_onnx_ros)/models/$(arg asr_model_folder)/joiner-epoch-99-avg-1.onnx" />
+         -->
+
+        <param name="tokens_asr" value="$(find sherpa_onnx_ros)/models/$(arg asr_model_folder)/tokens.txt" /> <!--  tokens 文件通常两个模型通用，用 ASR 的即可 -->
+
+        <!-- Speech Recognizer 其他参数 -->
+        <param name="decoding_method" value="greedy_search" />
+        <param name="provider" value="cpu" />
+        <param name="rule2_min_trailing_silence" value="0.6" /> <!-- 保留 Speech Recognizer 的 rule2_min_trailing_silence -->
+        <param name="awake" value="$(arg awake)" />
+        <param name="hw_aec" value="$(arg hw_aec)" />
+        <param name="sample_rate" value="16000" /> <!--  sample_rate 参数两个模型通用 -->
+    </node>
+
+    <include file="$(find sherpa_onnx_ros)/launch/tts.launch"/>
+    <node pkg="sherpa_onnx_ros" type="voice_command.py" name="voice_command" output="screen"/>
+</launch>

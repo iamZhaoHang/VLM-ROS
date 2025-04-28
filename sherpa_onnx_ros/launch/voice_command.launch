@@ -1,0 +1,5 @@
+<launch>
+    <node pkg="sherpa_onnx_ros" type="voice_command.py" name="voice_command" output="screen"/>
+    <include file="$(find sherpa_onnx_ros)/launch/tts.launch"/>
+    <include file="$(find sherpa_onnx_ros)/launch/keywords_node.launch"/>
+</launch>

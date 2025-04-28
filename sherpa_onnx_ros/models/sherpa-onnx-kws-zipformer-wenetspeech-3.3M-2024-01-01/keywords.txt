@@ -1,0 +1,13 @@
+n ǐ h ǎo  x iǎo p ài @你好小派
+q ián j ìn @前进
+h òu t uì @后退
+z uǒ zh uǎn @左转
+y òu zh uǎn  @右转 
+h uí zh ōng @回中
+zh í x íng @直行
+t íng zh ǐ @停止
+g uò l ái @过来
+zh uǎn g è q uān  @转个圈
+t uì x ià @退下
+x iàng  q ián  y ī  m ǐ  @向前一米
+x iàng  h òu  y ī  m ǐ @向后一米

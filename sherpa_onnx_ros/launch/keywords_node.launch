@@ -1,0 +1,22 @@
+<launch>
+    <!-- 设置模型文件夹的名称 -->
+    <arg name="model_folder" default="sherpa-onnx-kws-zipformer-wenetspeech-3.3M-2024-01-01" />
+
+    <!-- 启动关键词检测节点 -->
+    <node pkg="sherpa_onnx_ros" type="keyword_spotter_node.py" name="keyword_spotter" output="screen">
+        <!-- 模型文件路径 -->
+        <param name="tokens" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/tokens.txt" />
+        <param name="encoder" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/encoder-epoch-99-avg-1-chunk-16-left-64.onnx" />
+        <param name="decoder" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/decoder-epoch-99-avg-1-chunk-16-left-64.onnx" />
+        <param name="joiner" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/joiner-epoch-99-avg-1-chunk-16-left-64.onnx" />
+        <param name="keywords_file" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/keywords.txt" />
+
+        <!-- 参数配置 -->
+        <param name="num_threads" value="1" />
+        <param name="provider" value="cpu" />
+        <param name="keywords_score" value="1.0" />
+        <param name="keywords_threshold" value="0.25" />
+        <param name="num_trailing_blanks" value="1" />
+        <param name="sample_rate" value="16000" />
+    </node>
+</launch>

@@ -1,0 +1,12 @@
+# MoveBase.action
+#用途：VLM返回的Action指令，以Goal的形式发送到move_base_server.cpp中进行处理
+
+# Goal: 客户端发送的指令
+string command
+---
+# Result: 服务端完成动作后的结果
+bool success
+string message
+---
+# Feedback: 服务端执行过程中的反馈 (可选，这里我们不使用)
+# float32 percent_complete

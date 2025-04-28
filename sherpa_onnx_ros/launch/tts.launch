@@ -1,0 +1,28 @@
+<launch>
+    <!-- 定义模型文件夹参数 -->
+    <arg name="model_folder" default="vits-icefall-zh-aishell3" />
+    <arg name="sid" default="89" />
+    <!-- 启动 TTS 节点 -->
+    <node pkg="sherpa_onnx_ros" type="tts_generation_node.py" name="offline_tts" output="screen">
+    <!-- <node pkg="sherpa_onnx_ros" type="tts.py" name="offline_tts" output="screen"> -->
+        <!-- 模型路径 -->
+        <param name="vits_model" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/model.onnx" />
+        <param name="vits_lexicon" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/lexicon.txt" />
+        <param name="vits_tokens" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/tokens.txt" />
+        <!-- <param name="vits_dict_dir" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/dict" /> -->
+        <param name="tts_rule_fsts" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/phone.fst,$(find sherpa_onnx_ros)/models/$(arg model_folder)/date.fst,$(find sherpa_onnx_ros)/models/$(arg model_folder)/number.fst" />
+
+        <!-- 其他参数 -->
+        <param name="sid" value="$(arg sid)" />
+        <param name="debug" value="false" />
+        <param name="provider" value="cpu" />
+        <param name="num_threads" value="4" />
+        <param name="speed" value="1.0" />
+
+        <!-- 控制是否保存音频 -->
+        <param name="save_sound" value="false" />
+
+        <!-- 输入文本 ROS 话题 -->
+        <param name="text_topic" value="tts_input" />
+    </node>
+</launch>

@@ -1,0 +1,35 @@
+<launch>
+    <!-- 定义模型文件夹参数 -->
+    <!-- <arg name="model_folder" default="sherpa-onnx-streaming-zipformer-bilingual-zh-en-2023-02-20" /> -->
+    <arg name="model_folder" default="sherpa-onnx-streaming-zipformer-zh-14M-2023-02-23" />
+    <arg name="awake" default="true" />
+    <arg name="hw_aec" default="false" />
+
+    <!-- 启动 Speech Recognizer 节点 -->
+    <node pkg="sherpa_onnx_ros" type="asr.py" name="speech_recognizer" output="screen">
+        <!-- 模型路径 -->
+        <!-- int8 type -->
+        <param name="encoder" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/encoder-epoch-99-avg-1.int8.onnx" />
+        <param name="decoder" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/decoder-epoch-99-avg-1.int8.onnx" />
+        <param name="joiner" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/joiner-epoch-99-avg-1.int8.onnx" />
+        <!-- fp32 type -->
+        <param name="encoder" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/encoder-epoch-99-avg-1.onnx" />
+        <param name="decoder" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/decoder-epoch-99-avg-1.onnx" />
+        <param name="joiner" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/joiner-epoch-99-avg-1.onnx" />
+
+        <param name="tokens" value="$(find sherpa_onnx_ros)/models/$(arg model_folder)/tokens.txt" />
+
+        <!-- 其他参数 -->
+        <param name="decoding_method" value="greedy_search" />
+        <param name="provider" value="cpu" />
+        <param name="hotwords_file" value="" />
+        <param name="hotwords_score" value="1.5" />
+        <param name="blank_penalty" value="0.0" />
+        <param name="rule2_min_trailing_silence" value="0.6" />
+
+        <param name="awake" value="$(arg awake)" />
+        <param name="hw_aec" value="false" />
+    </node>
+
+    <include file="$(find sherpa_onnx_ros)/launch/tts.launch"/>
+</launch>
